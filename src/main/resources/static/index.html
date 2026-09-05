@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RoyaL Jwellery - Fine Gold, Diamond, Kundan, and Solitaire Jewellery for Auspicious Celebrations">
+  <title>RoyaL Jwellery | Crafted with Royalty, Treasured for Eternity</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       MAIN NAVIGATION BAR
+       ========================================================================= -->
+  <header class="navbar">
+    <div class="nav-container">
+      <!-- Brand Logo -->
+      <div class="brand-logo" onclick="App.showStoreView()">
+        <i class="fas fa-crown crown-icon"></i>
+        <div>
+          <span class="brand-title">RoyaL Jwellery</span>
+          <span class="brand-subtitle">Fine Jewellery Boutique</span>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="search-input" class="search-input" placeholder="Search necklaces, diamond rings, bridal sets, bangles..." autocomplete="off">
+      </div>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <!-- Guest Actions -->
+        <div id="nav-guest-actions" style="display: flex; gap: 0.6rem; align-items: center;">
+          <button class="nav-btn" onclick="App.openAuthModal('login')">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+          <button class="nav-btn primary" onclick="App.openAuthModal('register')">
+            <i class="fas fa-user-plus"></i> Register
+          </button>
+        </div>
+
+        <!-- Authenticated Actions -->
+        <div id="nav-user-actions" style="display: none; gap: 0.8rem; align-items: center;">
+          <button class="nav-btn cart-btn" onclick="App.openCartDrawer()" title="View Shopping Cart">
+            <i class="fas fa-shopping-bag" style="color: #d4af37;"></i>
+            <span>Cart</span>
+            <span id="cart-badge-count" class="badge" style="display: none;">0</span>
+          </button>
+
+          <a href="#orders" class="nav-btn" onclick="App.showOrdersView()">
+            <i class="fas fa-box"></i> My Orders
+          </a>
+
+          <a id="nav-admin-link" href="#admin" class="nav-btn primary" style="display: none;" onclick="App.showAdminView()">
+            <i class="fas fa-crown"></i> Father's Portal
+          </a>
+
+          <!-- User Profile Dropdown -->
+          <div class="user-menu-wrapper">
+            <button class="nav-btn" onclick="App.toggleUserDropdown()">
+              <i class="fas fa-user-circle" style="font-size: 1.2rem; color: #d4af37;"></i>
+              <span id="user-display-name">Customer</span>
+              <i class="fas fa-chevron-down" style="font-size: 0.75rem; margin-left: 0.2rem;"></i>
+            </button>
+            <div id="user-dropdown-menu" class="user-dropdown">
+              <div class="user-dropdown-header">
+                <div class="name" id="user-dropdown-name">Rahul Sharma</div>
+                <div class="role-tag" id="user-display-role">Valued Patron</div>
+              </div>
+              <a class="dropdown-item" href="#profile" onclick="App.showProfileView()"><i class="fas fa-id-card"></i> Profile & Address</a>
+              <a class="dropdown-item" href="#orders" onclick="App.showOrdersView()"><i class="fas fa-receipt"></i> Order History</a>
+              <div style="border-top: 1px solid rgba(255,255,255,0.06); margin: 0.4rem 0;"></div>
+              <a class="dropdown-item" style="color: #ef4444;" onclick="App.handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       STOREFRONT VIEW
+       ========================================================================= -->
+  <main id="store-view">
+    <!-- Hero Banner -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <i class="fas fa-sparkles"></i> Royal Heritage Collection
+        </div>
+        <h1 class="hero-title">Crafted with Royalty,<br>Treasured for Eternity</h1>
+        <p class="hero-subtitle">
+          Experience timeless Indian craftsmanship with 100% BIS Hallmarked 22K Gold, certified solitaire diamonds, and handcrafted heirloom bridal jewelry.
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <button class="nav-btn primary" style="padding: 0.8rem 1.8rem; font-size: 1rem;" onclick="document.getElementById('products-section').scrollIntoView({behavior: 'smooth'})">
+            <i class="fas fa-gem"></i> Explore Royal Catalog
+          </button>
+          <button class="nav-btn" style="padding: 0.8rem 1.6rem; font-size: 1rem; border: 1px solid var(--border-glass);" onclick="App.filterCategory(3)">
+            <i class="fas fa-crown"></i> Exclusive Bridal Sets
+          </button>
+        </div>
+
+        <div class="hero-badges">
+          <div class="hero-badge-item">
+            <i class="fas fa-award"></i>
+            <div class="badge-text">
+              <h4>916 BIS Hallmarked</h4>
+              <p>100% Pure Certified Gold</p>
+            </div>
+          </div>
+          <div class="hero-badge-item">
+            <i class="fas fa-shield-alt"></i>
+            <div class="badge-text">
+              <h4>Insured Delivery</h4>
+              <p>Safe to your doorstep</p>
+            </div>
+          </div>
+          <div class="hero-badge-item">
+            <i class="fas fa-sync-alt"></i>
+            <div class="badge-text">
+              <h4>Lifetime Exchange</h4>
+              <p>Guaranteed buyback</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card-glow"></div>
+        <div class="hero-image-box">
+          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1000&q=80" alt="Royal Necklace Showcase">
+        </div>
+        <div class="hero-floating-tag">
+          <p>Featured Auspicious Masterpiece</p>
+          <h4>Maharani Emerald Choker</h4>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Royal Categories</h2>
+          <p class="section-subtitle">Discover handcrafted collections designed for weddings, celebrations & daily luxury</p>
+        </div>
+      </div>
+      <div id="category-pills-container" class="category-pills">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Products Catalog Section -->
+    <section id="products-section" class="products-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Treasured Jewels</h2>
+          <p class="section-subtitle">Explore pristine necklaces, solitaires, kadas, and bridal heirloom ornaments</p>
+        </div>
+      </div>
+      <div id="products-grid" class="product-grid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       CUSTOMER PORTAL VIEW (MY ORDERS & PROFILE)
+       ========================================================================= -->
+  <section id="customer-portal-view" style="display: none; max-width: 1100px; margin: 2.5rem auto 5rem; padding: 0 1.5rem;">
+    <div style="display: flex; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 1rem; margin-bottom: 2rem;">
+      <button id="cust-tab-btn-orders" class="nav-btn cust-tab-btn active" onclick="App.switchCustomerTab('orders')">
+        <i class="fas fa-box"></i> My Orders & Tracking
+      </button>
+      <button id="cust-tab-btn-profile" class="nav-btn cust-tab-btn" onclick="App.switchCustomerTab('profile')">
+        <i class="fas fa-user"></i> My Profile & Addresses
+      </button>
+    </div>
+
+    <!-- Orders Tab -->
+    <div id="cust-tab-orders" class="cust-tab-content">
+      <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: #f3e5ab;">Your Orders History</h3>
+      <div id="customer-orders-list">
+        <!-- Loaded via JavaScript -->
+      </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="cust-tab-profile" class="cust-tab-content" style="display: none;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1.8rem;">
+          <h4 style="font-size: 1.2rem; color: #f3e5ab; margin-bottom: 1.2rem;"><i class="fas fa-user-edit"></i> Profile Details</h4>
+          <form onsubmit="App.handleUpdateProfile(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" id="prof-name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address (Registered)</label>
+              <input type="email" id="prof-email" class="form-control" disabled style="opacity: 0.7;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" id="prof-phone" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary-block">Save Changes</button>
+          </form>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1.8rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+            <h4 style="font-size: 1.2rem; color: #f3e5ab;"><i class="fas fa-map-marker-alt"></i> Delivery Addresses</h4>
+            <button class="nav-btn primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="App.openModal('add-address-modal')">
+              <i class="fas fa-plus"></i> Add New
+            </button>
+          </div>
+          <div id="profile-addresses-list">
+            <!-- Loaded via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       FATHER'S ADMIN DASHBOARD PORTAL
+       ========================================================================= -->
+  <section id="admin-view" style="display: none;">
+    <div class="admin-layout">
+      <!-- Admin Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+          <div class="admin-store-tag">👑 RoyaL Jwellery Store</div>
+          <div class="admin-portal-title">Father's Dashboard</div>
+        </div>
+
+        <ul class="admin-nav">
+          <li class="admin-nav-item">
+            <a id="admin-nav-dashboard" class="admin-nav-link active" onclick="AdminPortal.switchTab('dashboard')">
+              <i class="fas fa-chart-line"></i> Dashboard Overview
+            </a>
+          </li>
+          <li class="admin-nav-item">
+            <a id="admin-nav-orders" class="admin-nav-link" onclick="AdminPortal.switchTab('orders')">
+              <i class="fas fa-shopping-cart"></i> Manage Orders
+            </a>
+          </li>
+          <li class="admin-nav-item">
+            <a id="admin-nav-products" class="admin-nav-link" onclick="AdminPortal.switchTab('products')">
+              <i class="fas fa-gem"></i> Manage Products
+            </a>
+          </li>
+          <li class="admin-nav-item">
+            <a class="admin-nav-link" onclick="AdminPortal.openAddProductModal()">
+              <i class="fas fa-plus-circle" style="color: #d4af37;"></i> Add New Product
+            </a>
+          </li>
+          <li class="admin-nav-item">
+            <a id="admin-nav-customers" class="admin-nav-link" onclick="AdminPortal.switchTab('customers')">
+              <i class="fas fa-users"></i> Patrons / Customers
+            </a>
+          </li>
+          <li class="admin-nav-item">
+            <a id="admin-nav-notifications" class="admin-nav-link" onclick="AdminPortal.switchTab('notifications')">
+              <i class="fas fa-bell"></i> In-App Alerts
+              <span id="admin-nav-notif-badge" class="admin-nav-badge" style="display: none;">0</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="admin-sidebar-footer">
+          <button class="nav-btn" style="width: 100%; border: 1px solid var(--border-glass);" onclick="App.showStoreView()">
+            <i class="fas fa-store"></i> Return to Storefront
+          </button>
+        </div>
+      </aside>
+
+      <!-- Admin Main View -->
+      <main class="admin-main">
+        <!-- Topbar with Notifications -->
+        <div class="admin-topbar">
+          <div class="admin-title-area">
+            <h2>Father's Control Center</h2>
+            <p>Real-time order monitoring, stock management & sales analytics</p>
+          </div>
+          <div class="admin-topbar-actions">
+            <!-- Live Notification Bell -->
+            <button class="notif-bell-btn" onclick="AdminPortal.toggleNotificationDropdown()" title="Order Notifications">
+              <i class="fas fa-bell"></i>
+              <span id="admin-notif-badge" class="notif-badge" style="display: none;">0</span>
+            </button>
+
+            <!-- Notification Dropdown Popover -->
+            <div id="admin-notif-dropdown" class="notif-dropdown">
+              <div class="notif-header">
+                <h4><i class="fas fa-bell"></i> Order Notifications</h4>
+                <button class="btn-mark-all-read" onclick="AdminPortal.markAllNotificationsRead()">Mark all read</button>
+              </div>
+              <div id="admin-notif-items-list" class="notif-list">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. DASHBOARD TAB -->
+        <div id="admin-pane-dashboard" class="admin-tab-pane">
+          <!-- Metric Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon icon-sales"><i class="fas fa-rupee-sign"></i></div>
+              <div class="stat-content">
+                <h3 id="stat-total-sales">₹0</h3>
+                <p>Total Revenue</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-orders"><i class="fas fa-box"></i></div>
+              <div class="stat-content">
+                <h3 id="stat-total-orders">0</h3>
+                <p>Total Orders</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-pending"><i class="fas fa-clock"></i></div>
+              <div class="stat-content">
+                <h3 id="stat-pending-orders">0</h3>
+                <p>Pending Processing</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-delivered"><i class="fas fa-check-circle"></i></div>
+              <div class="stat-content">
+                <h3 id="stat-delivered-orders">0</h3>
+                <p>Delivered Orders</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-products"><i class="fas fa-gem"></i></div>
+              <div class="stat-content">
+                <h3 id="stat-total-products">0</h3>
+                <p>Total Products</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-customers"><i class="fas fa-users"></i></div>
+              <div class="stat-content">
+                <h3 id="stat-total-customers">0</h3>
+                <p>Registered Patrons</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Orders & Inventory Warnings Grid -->
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.8rem;">
+            <!-- Recent Orders Table Card -->
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3><i class="fas fa-receipt" style="color:#d4af37;"></i> Recent Orders</h3>
+                <button class="nav-btn" style="font-size:0.8rem; padding:0.3rem 0.7rem;" onclick="AdminPortal.switchTab('orders')">View All</button>
+              </div>
+              <div class="admin-table-wrapper">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Order #</th>
+                      <th>Customer</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-recent-orders-tbody">
+                    <!-- Injected via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Low Stock Alerts -->
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3><i class="fas fa-exclamation-triangle" style="color:#fbbf24;"></i> Low Stock Alerts</h3>
+              </div>
+              <div style="padding: 1.2rem;" id="admin-low-stock-list">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. ORDERS TAB -->
+        <div id="admin-pane-orders" class="admin-tab-pane" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="fas fa-boxes" style="color:#d4af37;"></i> All Customer Orders</h3>
+              <div class="admin-table-controls">
+                <input type="text" id="admin-orders-search" class="search-input" style="max-width: 260px; padding: 0.45rem 1rem;" placeholder="Search Order # or Customer..." oninput="AdminPortal.loadOrders()">
+                <select id="admin-orders-filter-status" class="form-control" style="width: 170px; padding: 0.45rem;" onchange="AdminPortal.loadOrders()">
+                  <option value="">All Statuses</option>
+                  <option value="PLACED">PLACED</option>
+                  <option value="CONFIRMED">CONFIRMED</option>
+                  <option value="PACKED">PACKED</option>
+                  <option value="OUT_FOR_DELIVERY">OUT_FOR_DELIVERY</option>
+                  <option value="DELIVERED">DELIVERED</option>
+                  <option value="CANCELLED">CANCELLED</option>
+                </select>
+              </div>
+            </div>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer & Phone</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Current Status</th>
+                    <th>Date</th>
+                    <th>Update Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. PRODUCTS TAB -->
+        <div id="admin-pane-products" class="admin-tab-pane" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="fas fa-gem" style="color:#d4af37;"></i> Product Inventory Management</h3>
+              <button class="nav-btn primary" onclick="AdminPortal.openAddProductModal()">
+                <i class="fas fa-plus"></i> Add New Jewellery
+              </button>
+            </div>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-products-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. CUSTOMERS TAB -->
+        <div id="admin-pane-customers" class="admin-tab-pane" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="fas fa-users" style="color:#d4af37;"></i> Registered Patrons Directory</h3>
+            </div>
+            <div class="admin-table-wrapper">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Phone</th>
+                    <th>Saved Addresses</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-customers-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. NOTIFICATIONS TAB -->
+        <div id="admin-pane-notifications" class="admin-tab-pane" style="display: none;">
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3><i class="fas fa-bell" style="color:#d4af37;"></i> Real-Time In-App Order Notifications</h3>
+              <button class="btn-mark-all-read" onclick="AdminPortal.markAllNotificationsRead()">Mark all read</button>
+            </div>
+            <div id="admin-notifications-pane-list" style="padding: 1rem;">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       CART DRAWER (SLIDE-OVER)
+       ========================================================================= -->
+  <div id="cart-overlay" class="cart-overlay">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h3><i class="fas fa-shopping-bag" style="color: #d4af37;"></i> Royal Shopping Cart</h3>
+        <button class="btn-close" onclick="App.closeCartDrawer()"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div id="cart-drawer-body" class="cart-body">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div id="cart-drawer-footer" class="cart-footer">
+        <div class="cart-summary-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal-val">₹0</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>Insured Express Shipping</span>
+          <span style="color: #10b981;">FREE</span>
+        </div>
+        <div class="cart-total-row">
+          <span>Estimated Total</span>
+          <span id="cart-total-val">₹0</span>
+        </div>
+        <button class="btn-checkout" onclick="App.proceedToCheckout()">
+          <i class="fas fa-shield-alt"></i> Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODALS
+       ========================================================================= -->
+
+  <!-- 1. AUTH MODAL (LOGIN & REGISTER) -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-crown"></i> RoyaL Jwellery Account</h3>
+        <button class="btn-close" onclick="App.closeModal('auth-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <!-- Login Form -->
+        <div id="auth-login-box">
+          <form onsubmit="App.handleLogin(event)">
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" id="login-email" class="form-control" placeholder="e.g. customer@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary-block">Sign In</button>
+          </form>
+          <div class="auth-switch-text">
+            Don't have an account? <a onclick="App.openAuthModal('register')">Create an Account</a>
+          </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="auth-register-box" style="display: none;">
+          <form onsubmit="App.handleRegister(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" id="reg-name" class="form-control" placeholder="Rahul Sharma" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" id="reg-email" class="form-control" placeholder="rahul@example.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" id="reg-phone" class="form-control" placeholder="+91 98765 43210" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password (Min. 6 chars)</label>
+              <input type="password" id="reg-password" class="form-control" placeholder="••••••••" minlength="6" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Street Address / House No.</label>
+              <input type="text" id="reg-street" class="form-control" placeholder="Flat 4B, Emerald Heights, MG Road" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="text" id="reg-city" class="form-control" placeholder="Bengaluru" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">State</label>
+                <input type="text" id="reg-state" class="form-control" placeholder="Karnataka" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Pincode</label>
+                <input type="text" id="reg-pincode" class="form-control" placeholder="560001" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Landmark (Optional)</label>
+                <input type="text" id="reg-landmark" class="form-control" placeholder="Near Metro Station">
+              </div>
+            </div>
+            <button type="submit" class="btn-primary-block">Complete Registration</button>
+          </form>
+          <div class="auth-switch-text">
+            Already registered? <a onclick="App.openAuthModal('login')">Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. PRODUCT DETAILS MODAL -->
+  <div id="product-details-modal" class="modal-overlay">
+    <div class="modal-card large">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-gem"></i> Masterpiece Details</h3>
+        <button class="btn-close" onclick="App.closeModal('product-details-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem;">
+          <div style="border-radius: var(--radius-md); overflow: hidden; height: 360px; background: #000;">
+            <img id="modal-product-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div>
+            <div id="modal-product-category" class="product-category">Royal Collection</div>
+            <h2 id="modal-product-title" style="font-size: 1.5rem; margin-bottom: 0.8rem;">Product Title</h2>
+            <div id="modal-product-price" class="product-price" style="font-size: 1.8rem; margin-bottom: 1.2rem;">₹0</div>
+
+            <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.2rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.88rem;">
+                <span style="color: #94a3b8;">Metal / Purity:</span>
+                <strong id="modal-product-purity" style="color: #f3e5ab;">22K Yellow Gold</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.88rem;">
+                <span style="color: #94a3b8;">Gross Weight:</span>
+                <strong id="modal-product-weight" style="color: #f3e5ab;">18.50 g</strong>
+              </div>
+            </div>
+
+            <p id="modal-product-desc" style="color: #94a3b8; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;"></p>
+            <div id="modal-product-stock" style="font-size: 0.82rem; color: #10b981; font-weight: 600; margin-bottom: 1.2rem;">In Stock</div>
+
+            <div style="display: flex; gap: 1rem; align-items: center;">
+              <div class="qty-control" style="height: 44px;">
+                <button class="qty-btn" style="width: 36px; height: 44px;" onclick="App.modalAdjustQty(-1)">-</button>
+                <input type="number" id="modal-product-qty" value="1" min="1" style="width: 44px; text-align: center; background: transparent; border: none; color: white; font-weight: 700;">
+                <button class="qty-btn" style="width: 36px; height: 44px;" onclick="App.modalAdjustQty(1)">+</button>
+              </div>
+              <button id="modal-btn-add-cart" class="btn-checkout" style="margin-top: 0; flex: 1;" onclick="App.handleModalAddToCart()">
+                <i class="fas fa-shopping-bag"></i> Add to Royal Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CHECKOUT MODAL -->
+  <div id="checkout-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-shield-alt"></i> Complete Royal Order</h3>
+        <button class="btn-close" onclick="App.closeModal('checkout-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="background: rgba(212,175,55,0.1); border: 1px solid var(--border-glass); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.4rem; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Order Summary</div>
+            <strong id="checkout-items-count">1</strong> Items in Cart
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.82rem; color: #94a3b8;">Payable Amount</div>
+            <strong id="checkout-total-val" style="font-size: 1.3rem; color: #f3e5ab; font-family: 'Cinzel', serif;">₹0</strong>
+          </div>
+        </div>
+
+        <form id="checkout-form" onsubmit="App.handlePlaceOrder(event)">
+          <!-- Address Selector -->
+          <div id="checkout-addresses-list" style="margin-bottom: 1.2rem;"></div>
+
+          <!-- New Address Subform -->
+          <div id="checkout-new-address-form" style="display: none; background: rgba(7,9,14,0.6); padding: 1rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem; border: 1px solid rgba(255,255,255,0.06);">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Recipient Name</label>
+                <input type="text" id="co-name" class="form-control" placeholder="Recipient Name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" id="co-phone" class="form-control" placeholder="+91 98765 43210">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Delivery Street Address</label>
+              <input type="text" id="co-street" class="form-control" placeholder="Door/Flat No., Street, Area">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="text" id="co-city" class="form-control" placeholder="City">
+              </div>
+              <div class="form-group">
+                <label class="form-label">State</label>
+                <input type="text" id="co-state" class="form-control" placeholder="State">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Pincode</label>
+                <input type="text" id="co-pincode" class="form-control" placeholder="Pincode">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Landmark</label>
+                <input type="text" id="co-landmark" class="form-control" placeholder="Landmark">
+              </div>
+            </div>
+            <label style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.85rem; color: #94a3b8; cursor: pointer;">
+              <input type="checkbox" id="co-save-addr" checked> Save this address for future purchases
+            </label>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="form-group">
+            <label class="form-label">Payment Option</label>
+            <select id="checkout-payment-method" class="form-control">
+              <option value="Cash on Delivery">Cash on Delivery (Pay at Doorstep)</option>
+              <option value="UPI / Online Transfer (Demo)">UPI / Online Demo Payment</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Special Delivery Instructions (Optional)</label>
+            <input type="text" id="checkout-notes" class="form-control" placeholder="e.g. Ring doorbell, deliver after 4 PM">
+          </div>
+
+          <button type="submit" id="btn-submit-order" class="btn-primary-block" style="padding: 0.9rem; font-size: 1.05rem;">
+            <i class="fas fa-shield-alt"></i> Confirm & Place Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ORDER CONFIRMATION / SUCCESS MODAL -->
+  <div id="order-success-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-body" style="text-align: center; padding: 2.5rem 2rem;">
+        <div style="width: 70px; height: 70px; border-radius: 50%; background: rgba(16,185,129,0.2); border: 2px solid #10b981; color: #10b981; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+          <i class="fas fa-check"></i>
+        </div>
+        <h2 style="font-size: 1.7rem; color: #f3e5ab; margin-bottom: 0.5rem;">Order Placed Successfully!</h2>
+        <p style="color: #94a3b8; font-size: 0.92rem; margin-bottom: 1.8rem;">
+          Thank you for choosing RoyaL Jwellery. Your father's boutique has received your order request.
+        </p>
+
+        <div style="background: rgba(7,9,14,0.85); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1.2rem; text-align: left; margin-bottom: 1.8rem; font-size: 0.88rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="color: #94a3b8;">Order Number:</span>
+            <strong id="conf-order-number" style="color: #f3e5ab;">RJ-2026-1001</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="color: #94a3b8;">Total Payable:</span>
+            <strong id="conf-order-total" style="color: #f3e5ab; font-family:'Cinzel',serif;">₹0</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="color: #94a3b8;">Recipient:</span>
+            <span id="conf-recipient-name">Rahul Sharma</span> (<span id="conf-recipient-phone">+91 98123 45678</span>)
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="color: #94a3b8;">Payment:</span>
+            <span id="conf-payment">Cash on Delivery</span>
+          </div>
+          <div style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed rgba(255,255,255,0.08);">
+            <div style="color: #94a3b8; margin-bottom: 0.2rem;">Delivery Destination:</div>
+            <div id="conf-address" style="color: #f8fafc;">42 Pearl Lane, MG Road, Bangalore</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button class="nav-btn primary" style="flex: 1;" onclick="App.closeModal('order-success-modal'); App.showOrdersView();">
+            <i class="fas fa-box"></i> View & Track Order
+          </button>
+          <button class="nav-btn" style="border: 1px solid var(--border-glass);" onclick="App.closeModal('order-success-modal'); App.showStoreView();">
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ORDER TRACKING TIMELINE MODAL -->
+  <div id="order-tracking-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-truck"></i> Track Royal Order</h3>
+        <button class="btn-close" onclick="App.closeModal('order-tracking-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <div>
+            <h4 style="font-size: 1.2rem; color: #f3e5ab;">Order #<span id="track-order-num"></span></h4>
+            <div style="font-size: 0.8rem; color: #94a3b8;" id="track-order-date"></div>
+          </div>
+          <div style="font-family:'Cinzel',serif; font-size: 1.3rem; font-weight: 800; color: #f3e5ab;" id="track-order-total"></div>
+        </div>
+
+        <!-- Visual Step Timeline -->
+        <div id="tracking-timeline-box">
+          <div class="order-tracking-timeline">
+            <div class="tracking-progress-bar">
+              <div id="tracking-progress-fill" class="tracking-progress-fill" style="width: 0%;"></div>
+            </div>
+            <div id="track-step-placed" class="tracking-step active">
+              <div class="tracking-step-dot"><i class="fas fa-receipt"></i></div>
+              <span class="tracking-step-label">Placed</span>
+            </div>
+            <div id="track-step-confirmed" class="tracking-step">
+              <div class="tracking-step-dot"><i class="fas fa-check"></i></div>
+              <span class="tracking-step-label">Confirmed</span>
+            </div>
+            <div id="track-step-packed" class="tracking-step">
+              <div class="tracking-step-dot"><i class="fas fa-box"></i></div>
+              <span class="tracking-step-label">Packed</span>
+            </div>
+            <div id="track-step-out_for_delivery" class="tracking-step">
+              <div class="tracking-step-dot"><i class="fas fa-shipping-fast"></i></div>
+              <span class="tracking-step-label">Out</span>
+            </div>
+            <div id="track-step-delivered" class="tracking-step">
+              <div class="tracking-step-dot"><i class="fas fa-home"></i></div>
+              <span class="tracking-step-label">Delivered</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Destination Address -->
+        <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 1rem; margin: 1.5rem 0;">
+          <div style="font-size: 0.78rem; color: #d4af37; text-transform: uppercase; font-weight: 700; margin-bottom: 0.2rem;">Delivery Address</div>
+          <div id="track-delivery-address" style="font-size: 0.88rem; color: #f8fafc;"></div>
+        </div>
+
+        <!-- Items Ordered -->
+        <div style="margin-bottom: 1.5rem;">
+          <h5 style="font-size: 0.9rem; color: #94a3b8; text-transform: uppercase; margin-bottom: 0.6rem;">Items in Shipment</h5>
+          <div id="track-items-list"></div>
+        </div>
+
+        <button id="btn-cancel-my-order" class="nav-btn" style="width: 100%; border: 1px solid rgba(239,68,68,0.4); color: #ef4444; display: none;">
+          <i class="fas fa-ban"></i> Cancel Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ADMIN ADD/EDIT PRODUCT MODAL -->
+  <div id="admin-product-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="admin-product-modal-title" class="modal-title"><i class="fas fa-gem"></i> Add Royal Jewellery Piece</h3>
+        <button class="btn-close" onclick="App.closeModal('admin-product-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="AdminPortal.handleSaveProduct(event)">
+          <input type="hidden" id="prod-form-id">
+          
+          <div class="form-group">
+            <label class="form-label">Product Name</label>
+            <input type="text" id="prod-name" class="form-control" placeholder="e.g. Maharani Kundan Choker Necklace" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="prod-category" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price (in ₹ INR)</label>
+              <input type="number" id="prod-price" class="form-control" placeholder="85000" min="1" step="0.01" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Stock Quantity</label>
+              <input type="number" id="prod-stock" class="form-control" placeholder="5" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Metal / Karat Purity</label>
+              <input type="text" id="prod-purity" class="form-control" placeholder="22K Yellow Gold (916 BIS)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Weight (Grams)</label>
+            <input type="text" id="prod-weight" class="form-control" placeholder="e.g. 24.50 g">
+          </div>
+
+          <!-- Drag & Drop Product Image Upload (No URL input) -->
+          <div class="form-group">
+            <label class="form-label">
+              Product Jewellery Image <span style="color: var(--gold-light); font-size: 0.78rem;">(Drag & drop photo)</span>
+            </label>
+            <input type="hidden" id="prod-image" required>
+            <input type="file" id="prod-file-input" accept="image/jpeg,image/png,image/webp,image/gif" style="display: none;" onchange="AdminPortal.handleFileSelect(event)">
+            
+            <div id="image-drop-zone" class="image-drop-zone" onclick="document.getElementById('prod-file-input').click()" ondragover="AdminPortal.handleDragOver(event)" ondragleave="AdminPortal.handleDragLeave(event)" ondrop="AdminPortal.handleFileDrop(event)">
+              <!-- Prompt State -->
+              <div id="drop-zone-prompt" class="drop-zone-content">
+                <div class="drop-zone-icon">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="drop-zone-text">
+                  <span class="drop-zone-primary">Click to browse</span> or drag and drop jewellery photo
+                </div>
+                <div class="drop-zone-sub">PNG, JPG, WEBP, or GIF (Max 10MB)</div>
+              </div>
+
+              <!-- Live Preview State -->
+              <div id="drop-zone-preview-container" class="drop-zone-preview" style="display: none;">
+                <img id="prod-image-preview" src="" alt="Jewellery Masterpiece Preview">
+                <div class="drop-preview-overlay">
+                  <span id="upload-status-badge" class="upload-badge"><i class="fas fa-check-circle"></i> Image Ready</span>
+                  <button type="button" class="btn-change-image" onclick="event.stopPropagation(); document.getElementById('prod-file-input').click()">
+                    <i class="fas fa-sync-alt"></i> Replace Photo
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Detailed Description</label>
+            <textarea id="prod-desc" class="form-control" rows="3" placeholder="Crafted with polki diamonds and authentic emerald drops..."></textarea>
+          </div>
+
+          <div class="form-row" style="margin-bottom: 1.2rem;">
+            <label style="display: flex; gap: 0.5rem; align-items: center; color: #94a3b8; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" id="prod-active" checked> Active / Visible in Store
+            </label>
+            <label style="display: flex; gap: 0.5rem; align-items: center; color: #94a3b8; font-size: 0.88rem; cursor: pointer;">
+              <input type="checkbox" id="prod-featured"> Mark as Featured Piece
+            </label>
+          </div>
+
+          <button type="submit" class="btn-primary-block">Save Masterpiece</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. ADMIN ORDER INSPECTOR MODAL -->
+  <div id="admin-order-modal" class="modal-overlay">
+    <div class="modal-card large">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-file-invoice"></i> Order Details #<span id="admin-modal-order-num"></span></h3>
+        <button class="btn-close" onclick="App.closeModal('admin-order-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+          <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 1.2rem;">
+            <h4 style="font-size: 0.95rem; color: #d4af37; margin-bottom: 0.6rem;">Customer Contact</h4>
+            <div style="font-size: 0.88rem; line-height: 1.7;">
+              <strong>Customer:</strong> <span id="admin-modal-cust-name"></span><br>
+              <strong>Email:</strong> <span id="admin-modal-cust-email"></span><br>
+              <strong>Phone:</strong> <span id="admin-modal-cust-phone"></span>
+            </div>
+          </div>
+          <div style="background: rgba(7,9,14,0.7); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 1.2rem;">
+            <h4 style="font-size: 0.95rem; color: #d4af37; margin-bottom: 0.6rem;">Delivery Destination</h4>
+            <div style="font-size: 0.88rem; line-height: 1.7;">
+              <strong>Recipient:</strong> <span id="admin-modal-recipient-name"></span> (<span id="admin-modal-recipient-phone"></span>)<br>
+              <strong>Address:</strong> <span id="admin-modal-address"></span><br>
+              <strong>Payment:</strong> <span id="admin-modal-payment"></span><br>
+              <strong>Notes:</strong> <span id="admin-modal-notes" style="color: #fbbf24;"></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+          <h4 style="font-size: 1rem; color: #f8fafc;">Ordered Items</h4>
+          <div id="admin-modal-status-badge"></div>
+        </div>
+
+        <div class="admin-table-wrapper" style="margin-bottom: 1.5rem;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="admin-modal-items-tbody"></tbody>
+          </table>
+        </div>
+
+        <div style="text-align: right; font-size: 1.3rem; font-family:'Cinzel',serif; font-weight:800; color: #f3e5ab;">
+          Total Payable: <span id="admin-modal-total"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. ADD ADDRESS MODAL -->
+  <div id="add-address-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title"><i class="fas fa-map-marker-alt"></i> Add Delivery Address</h3>
+        <button class="btn-close" onclick="App.closeModal('add-address-modal')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="App.handleAddProfileAddress(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Recipient Full Name</label>
+              <input type="text" id="new-addr-name" class="form-control" placeholder="Recipient Name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Phone</label>
+              <input type="tel" id="new-addr-phone" class="form-control" placeholder="+91 98765 43210" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Street / House Address</label>
+            <input type="text" id="new-addr-street" class="form-control" placeholder="House / Flat No., Road" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">City</label>
+              <input type="text" id="new-addr-city" class="form-control" placeholder="City" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">State</label>
+              <input type="text" id="new-addr-state" class="form-control" placeholder="State" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Pincode</label>
+              <input type="text" id="new-addr-pincode" class="form-control" placeholder="Pincode" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Landmark</label>
+              <input type="text" id="new-addr-landmark" class="form-control" placeholder="Landmark">
+            </div>
+          </div>
+          <label style="display: flex; gap: 0.5rem; align-items: center; color: #94a3b8; font-size: 0.88rem; margin-bottom: 1.2rem; cursor: pointer;">
+            <input type="checkbox" id="new-addr-default"> Set as Default Delivery Address
+          </label>
+          <button type="submit" class="btn-primary-block">Save Address</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-logo">
+          <i class="fas fa-crown crown-icon"></i>
+          <div>
+            <span class="brand-title">RoyaL Jwellery</span>
+            <span class="brand-subtitle">Fine Jewellery Boutique</span>
+          </div>
+        </div>
+        <p>
+          Handcrafting auspicious fine jewellery for over three generations. 100% BIS Hallmarked gold, IGI certified diamonds, and precious gemstones.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="footer-title">Royal Collections</h4>
+        <ul class="footer-links">
+          <li><a href="#" onclick="App.filterCategory(1)">Necklaces & Chokers</a></li>
+          <li><a href="#" onclick="App.filterCategory(2)">Solitaire & Diamond Rings</a></li>
+          <li><a href="#" onclick="App.filterCategory(3)">Kundan Bridal Sets</a></li>
+          <li><a href="#" onclick="App.filterCategory(4)">Gold & Platinum Bangles</a></li>
+          <li><a href="#" onclick="App.filterCategory(5)">Royal Jhumkas & Drops</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-title">Customer Care</h4>
+        <ul class="footer-links">
+          <li><a href="#orders" onclick="App.showOrdersView()">Track Your Order</a></li>
+          <li><a href="#profile" onclick="App.showProfileView()">Account Settings</a></li>
+          <li><a href="#">Jewellery Care Guide</a></li>
+          <li><a href="#">BIS Hallmarking Verification</a></li>
+          <li><a href="#">Lifetime Exchange Policy</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-title">Boutique Visit</h4>
+        <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.7;">
+          <strong>Father's Boutique:</strong><br>
+          108 Gold Souk Palace, Royal Heritage Avenue,<br>
+          Mumbai, Maharashtra - 400001<br>
+          Ph: +91 98765 43210
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 RoyaL Jwellery. All Rights Reserved.</div>
+      <div>Crafted for Father's Local Shop • Complete Full-Stack Platform</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
