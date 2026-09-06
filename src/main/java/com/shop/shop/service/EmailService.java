@@ -31,6 +31,15 @@ public class EmailService {
     @Value("${spring.mail.username:}")
     private String mailUsername;
 
+    @Value("${resend.api.key:${RESEND_API_KEY:}}")
+    private String resendApiKey;
+
+    @Value("${brevo.api.key:${BREVO_API_KEY:}}")
+    private String brevoApiKey;
+
+    private final java.net.http.HttpClient httpClient = java.net.http.HttpClient.newHttpClient();
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+
     @Autowired
     public EmailService(@Autowired(required = false) JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -38,58 +47,116 @@ public class EmailService {
 
     @Async
     public void sendNewOrderAdminAlert(Order order) {
-        if (!isMailConfigured()) {
-            logger.info("[EmailService] SMTP credentials not fully configured (username blank or mail disabled). " +
-                    "Skipping email alert for Order #{} to admin {}.", order.getOrderNumber(), adminEmail);
-            return;
-        }
+        if (!mailEnabled) return;
 
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        String subject = "💎 New Order Alert: #" + order.getOrderNumber() + " - ₹" + order.getTotalAmount();
+        String htmlContent = buildAdminOrderAlertHtml(order);
 
-            String fromAddress = (mailUsername != null && !mailUsername.isBlank()) ? mailUsername : "noreply@royaljewellery.com";
-            helper.setFrom(fromAddress, "Royal Jewellery Store");
-            helper.setTo(adminEmail);
-            helper.setSubject("💎 New Order Alert: #" + order.getOrderNumber() + " - ₹" + order.getTotalAmount());
-
-            String htmlContent = buildAdminOrderAlertHtml(order);
-            helper.setText(htmlContent, true);
-
-            mailSender.send(message);
-            logger.info("[EmailService] Order notification email successfully dispatched to admin: {}", adminEmail);
-        } catch (Exception e) {
-            logger.error("[EmailService] Failed to send new order email alert for Order #{}: {}", order.getOrderNumber(), e.getMessage());
-        }
+        sendEmail(adminEmail, subject, htmlContent, "Admin Alert #" + order.getOrderNumber());
     }
 
     @Async
     public void sendOrderConfirmationCustomer(Order order) {
-        if (!isMailConfigured() || order.getUser() == null || order.getUser().getEmail() == null || order.getUser().getEmail().isBlank()) {
+        if (!mailEnabled || order.getUser() == null || order.getUser().getEmail() == null || order.getUser().getEmail().isBlank()) {
             return;
         }
 
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        String customerEmail = order.getUser().getEmail();
+        String subject = "✨ Order Confirmed: #" + order.getOrderNumber() + " - Royal Jewellery";
+        String htmlContent = buildCustomerOrderReceiptHtml(order);
 
-            String fromAddress = (mailUsername != null && !mailUsername.isBlank()) ? mailUsername : "noreply@royaljewellery.com";
-            helper.setFrom(fromAddress, "Royal Jewellery Store");
-            helper.setTo(order.getUser().getEmail());
-            helper.setSubject("✨ Order Confirmed: #" + order.getOrderNumber() + " - Royal Jewellery");
+        sendEmail(customerEmail, subject, htmlContent, "Customer Receipt #" + order.getOrderNumber());
+    }
 
-            String htmlContent = buildCustomerOrderReceiptHtml(order);
-            helper.setText(htmlContent, true);
+    private void sendEmail(String toEmail, String subject, String htmlContent, String logContext) {
+        // Priority 1: Resend HTTP API (Port 443 - Never blocked on Render)
+        if (resendApiKey != null && !resendApiKey.trim().isEmpty()) {
+            try {
+                String payload = objectMapper.writeValueAsString(java.util.Map.of(
+                        "from", "Royal Jewellery <onboarding@resend.dev>",
+                        "to", java.util.List.of(toEmail),
+                        "subject", subject,
+                        "html", htmlContent
+                ));
 
-            mailSender.send(message);
-            logger.info("[EmailService] Order confirmation receipt dispatched to customer: {}", order.getUser().getEmail());
-        } catch (Exception e) {
-            logger.error("[EmailService] Failed to send order receipt to customer {}: {}", order.getUser().getEmail(), e.getMessage());
+                java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+                        .uri(java.net.URI.create("https://api.resend.com/emails"))
+                        .header("Authorization", "Bearer " + resendApiKey.trim())
+                        .header("Content-Type", "application/json")
+                        .timeout(java.time.Duration.ofSeconds(10))
+                        .POST(java.net.http.HttpRequest.BodyPublishers.ofString(payload))
+                        .build();
+
+                java.net.http.HttpResponse<String> response = httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                    logger.info("[EmailService] Email dispatched successfully via Resend API to {} ({})", toEmail, logContext);
+                    return;
+                } else {
+                    logger.warn("[EmailService] Resend API returned status {}: {}. Falling back to SMTP...", response.statusCode(), response.body());
+                }
+            } catch (Exception e) {
+                logger.error("[EmailService] Resend API dispatch error: {}. Falling back to SMTP...", e.getMessage());
+            }
+        }
+
+        // Priority 2: Brevo HTTP API (Port 443 - Never blocked on Render)
+        if (brevoApiKey != null && !brevoApiKey.trim().isEmpty()) {
+            try {
+                String payload = objectMapper.writeValueAsString(java.util.Map.of(
+                        "sender", java.util.Map.of("name", "Royal Jewellery Store", "email", (mailUsername != null && !mailUsername.isBlank()) ? mailUsername : "noreply@royaljewellery.com"),
+                        "to", java.util.List.of(java.util.Map.of("email", toEmail)),
+                        "subject", subject,
+                        "htmlContent", htmlContent
+                ));
+
+                java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+                        .uri(java.net.URI.create("https://api.brevo.com/v3/smtp/email"))
+                        .header("api-key", brevoApiKey.trim())
+                        .header("Content-Type", "application/json")
+                        .timeout(java.time.Duration.ofSeconds(10))
+                        .POST(java.net.http.HttpRequest.BodyPublishers.ofString(payload))
+                        .build();
+
+                java.net.http.HttpResponse<String> response = httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                    logger.info("[EmailService] Email dispatched successfully via Brevo API to {} ({})", toEmail, logContext);
+                    return;
+                } else {
+                    logger.warn("[EmailService] Brevo API returned status {}: {}. Falling back to SMTP...", response.statusCode(), response.body());
+                }
+            } catch (Exception e) {
+                logger.error("[EmailService] Brevo API dispatch error: {}. Falling back to SMTP...", e.getMessage());
+            }
+        }
+
+        // Priority 3: Fallback to Standard SMTP
+        if (mailSender != null && mailUsername != null && !mailUsername.trim().isEmpty()) {
+            try {
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+                String fromAddress = (mailUsername != null && !mailUsername.isBlank()) ? mailUsername : "noreply@royaljewellery.com";
+                helper.setFrom(fromAddress, "Royal Jewellery Store");
+                helper.setTo(toEmail);
+                helper.setSubject(subject);
+                helper.setText(htmlContent, true);
+
+                mailSender.send(message);
+                logger.info("[EmailService] Email successfully dispatched via SMTP to {} ({})", toEmail, logContext);
+            } catch (Exception e) {
+                logger.error("[EmailService] Failed to send email via SMTP to {}: {}", toEmail, e.getMessage());
+            }
+        } else {
+            logger.info("[EmailService] No email provider (Resend API / Brevo API / SMTP) configured for dispatching to {}.", toEmail);
         }
     }
 
     public boolean isMailConfigured() {
-        return mailEnabled && mailSender != null && mailUsername != null && !mailUsername.trim().isEmpty();
+        return mailEnabled && (
+                (resendApiKey != null && !resendApiKey.trim().isEmpty()) ||
+                (brevoApiKey != null && !brevoApiKey.trim().isEmpty()) ||
+                (mailSender != null && mailUsername != null && !mailUsername.trim().isEmpty())
+        );
     }
 
     private String buildAdminOrderAlertHtml(Order order) {
