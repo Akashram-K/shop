@@ -2,15 +2,11 @@
 FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 
-# Copy maven wrapper and dependencies definition
+# Copy maven wrapper, pom.xml, and source code
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 RUN chmod +x mvnw
 
-# Pre-fetch dependencies for Docker caching
-RUN ./mvnw dependency:go-offline -B
-
-# Copy application source code and package
 COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
