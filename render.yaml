@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: royal-jewellery
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: master
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: PORT
+        value: 8080
